@@ -29,7 +29,6 @@ testpaths = ["tests"]
 # log_file_level = "INFO"
 # log_format = "%(asctime)s %(levelname)s %(message)s"
 
-
 [[tool.poetry.source]]
 name = "torch"
 url = "https://download.pytorch.org/whl/cu118"
