@@ -1,0 +1,3 @@
+# Generic, formatter-friendly config.
+# select = ["B", "D3", "E", "F"]
+line-length = 100
