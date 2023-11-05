@@ -4,7 +4,7 @@
 from torch import Size, Tensor
 from torch.nn import Conv2d, MaxPool2d, Module
 
-from object_detection.yolo.common.blocks.base import Unit, UnitType
+from object_detection.yolo.blocks.base import Unit, UnitType
 
 
 def test_cnn_unit(x_cnn: Tensor):
