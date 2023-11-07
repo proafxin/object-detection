@@ -7,11 +7,11 @@ license = "LICENSE"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.13"
+python = "^3.10"
 torchvision = { version = "^0.16.0+cu118", source = "torch" }
 torch = { version = "^2.1.0+cu118", source = "torch" }
 torchaudio = { version = "^2.1.0+cu118", source = "torch" }
-numpy = "^1.26.1"
+# numpy = "^1.26.1"
 
 
 [tool.poetry.group.dev.dependencies]
