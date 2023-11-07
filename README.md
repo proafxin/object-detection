@@ -1,6 +1,10 @@
 # Object Detection
 
-Implementation of different object detection algorithms. You need a CUDA compatible GPU for this to work.
+Library of different object detection algorithms. You need a CUDA compatible GPU for this to work.
+
+[![Trunk Check](https://github.com/proafxin/object-detection/actions/workflows/trunk.yml/badge.svg)](https://github.com/proafxin/object-detection/actions/workflows/trunk.yml)
+
+[![Upload Code Coverage to Codecov](https://github.com/proafxin/object-detection/actions/workflows/ci.yml/badge.svg)](https://github.com/proafxin/object-detection/actions/workflows/ci.yml)
 
 ## Development environment
 
