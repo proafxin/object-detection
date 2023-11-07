@@ -4,12 +4,12 @@
 from torch import Size, Tensor
 from torch.nn import Conv2d, MaxPool2d, Module
 
-from object_detection.yolo.blocks.base import Unit, UnitType
+from object_detection.yolo.units import Cell, CellType
 
 
 def test_cnn_unit(x_cnn: Tensor):
-    unit = Unit(
-        unit_type=UnitType.Convolutional,
+    unit = Cell(
+        cell_type=CellType.Convolutional,
         in_channels=3,
         out_channels=8,
         kernel_size=2,
@@ -29,7 +29,7 @@ def test_cnn_unit(x_cnn: Tensor):
 
 
 def test_maxpool_unit(x_cnn: Tensor):
-    unit = Unit(unit_type=UnitType.MaxPool2d, kernel_size=2, stride=2)
+    unit = Cell(cell_type=CellType.MaxPool2d, kernel_size=2, stride=2, padding=0)
     assert isinstance(unit, Module)
     assert isinstance(unit, MaxPool2d)
 
