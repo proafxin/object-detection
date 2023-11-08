@@ -27,7 +27,6 @@ jobs:
           python -m pip install -U pip
           python -m pip install -U tox
           tox
-          ls
           .tox/test/bin/coverage xml -o coverage.xml
 
       - name: Upload coverage to Codecov
