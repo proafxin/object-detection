@@ -16,13 +16,19 @@ class CellConfiguration(UnitConfiguration):
     pass
 
 
+class BatchNorm2dConfiguration(CellConfiguration):
+    num_features: int
+    eps: float = Field(default=1e-05)
+    momentum: float = Field(default=0.1)
+
+
 class MaxPool2dConfiguration(CellConfiguration):
     kernel_size: int = Field(default=2)
     stride: int = Field(default=2)
     padding: int = Field(default=0)
 
 
-class ConvolutionConfiguration(MaxPool2dConfiguration):
+class Convolution2dConfiguration(MaxPool2dConfiguration):
     in_channels: int
     out_channels: int
     bias: bool = Field(default=False)
@@ -45,6 +51,10 @@ class BlockConfiguration(UnitConfiguration):
 
     def add_cells(self, cell_config: CellConfiguration, repeat: int) -> None:
         self.block.append((cell_config, repeat))
+
+    def add_single_cells(self, *cells) -> None:
+        for cell in cells:
+            self.block.append((cell, 1))
 
 
 class LayerConfiguration(UnitConfiguration):
