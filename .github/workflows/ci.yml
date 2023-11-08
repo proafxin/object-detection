@@ -28,7 +28,7 @@ jobs:
           python -m pip install -U tox
           tox
           ls
-          .tox/test/lib/python3.10/site-packages/poetry run coverage xml -o coverage.xml
+          .tox/test/bin/poetry run coverage xml -o coverage.xml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
