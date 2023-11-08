@@ -1,92 +1,137 @@
 """A single unit of a block."""
 
 from dataclasses import dataclass
-from enum import Enum, auto
 
-from torch.nn import Conv2d, LeakyReLU, MaxPool2d, Module, ReLU
+from torch.nn import Conv2d, LeakyReLU, MaxPool2d, Module, ReLU, Sequential
 
-
-class IterableEnum(Enum):
-    @classmethod
-    def values(cls):
-        return [entry.value for entry in cls]
-
-
-class CellType(Enum):
-    Convolutional = auto()
-    MaxPool2d = auto()
-    ReLU = auto()
-    LeakyReLU = auto()
+from object_detection.yolo.config import (
+    CellConfiguration,
+    ConvolutionConfiguration,
+    LeakyReLUConfiguration,
+    MaxPool2dConfiguration,
+    ReLUConfiguration,
+)
 
 
-CELL_MAPPING: dict[int, Module] = {
-    CellType.Convolutional.value: Conv2d,
-    CellType.LeakyReLU.value: LeakyReLU,
-    CellType.MaxPool2d.value: MaxPool2d,
-    CellType.ReLU.value: ReLU,
-}
-
-
-class MaxPool2dParams(IterableEnum):
-    KERNEL_SIZE = "kernel_size"
-    STRIDE = "stride"
-    PADDING = "padding"
-
-
-class ConvolutionParams(IterableEnum):
-    KERNEL_SIZE = "kernel_size"
-    STRIDE = "stride"
-    PADDING = "padding"
-    IN_CHANNELS = "in_channels"
-    OUT_CHANNELS = "out_channels"
-
-
-class ReLUParams(IterableEnum):
-    pass
-
-
-class LeakyReLUParams(IterableEnum):
-    NEGATIVE_SLOPE = "negative_slope"
-
-
-class UnitType(IterableEnum):
-    CELL = auto()
-    BLOCK = auto()
-    LAYER = auto()
-
-
-CELL_PARAMS_MAPPING: dict[CellType, IterableEnum] = {
-    CellType.Convolutional: ConvolutionParams,
-    CellType.LeakyReLU: LeakyReLUParams,
-    CellType.MaxPool2d: MaxPool2dParams,
-    CellType.ReLU: ReLUParams,
-}
-
-
+@dataclass
 class Cell:
-    def __new__(cls, cell_type: CellType, **kwargs) -> Module:
-        cls.cell_type = cell_type
-        param_entries: IterableEnum = CELL_PARAMS_MAPPING[cls.cell_type]
-        params = param_entries.values()
-        for param in params:
-            if param not in kwargs:
-                raise KeyError(f"{param} not in {kwargs.keys()}")
+    """
+    Cell is the most basic unit in the model.
+    Example: conv2d, maxpool2d, relu, leakyrelu, etc.
+    Based on the cell configuration, this constructor returns the appropriate instantiation.
+    """
 
-        cls.cell = CELL_MAPPING[cell_type.value](**kwargs)
+    def __new__(cls, cell_configuration: CellConfiguration) -> Module:
+        kwargs = cell_configuration.model_dump()
 
-        return cls.cell
+        if isinstance(cell_configuration, ConvolutionConfiguration):
+            return Conv2d(**kwargs)
+
+        if isinstance(cell_configuration, MaxPool2dConfiguration):
+            return MaxPool2d(**kwargs)
+        if isinstance(cell_configuration, ReLUConfiguration):
+            return ReLU(**kwargs)
+
+        if isinstance(cell_configuration, LeakyReLUConfiguration):
+            return LeakyReLU(**kwargs)
 
 
 @dataclass
 class Block:
-    block: list[tuple[Cell, int]]
+    """A single block consists of some cells.
+    One cell is sometimes repeated multiple times at one go.
+    So the structure is a list of tuples.
+    Each tuple has two elements.
+    First element has the cell configuration.
+    Second element is an integer specifying the number of times this cell should be repeated.
+    An example: [(Conv2d, 3), (MaxPool2d, 1)]
+    Here, first cell is a convolution unit which should be repeated 3 times.
+    Then a maxpool unit which should not be repeated.
+    Note: `cells` is a direct list of all the cells.
+    Meaning for the example above, it will be like this: [Conv2d, Conv2d, Conv2d, MaxPool2d]
+    This is made so that we can access the cells directly without extra computation.
+    This way building the sequential model is easier.
+    """
+
+    cells: list[Cell]
+
+    def add_cells(self, cell: Cell, repeat: int) -> None:
+        """Add new cells to the current block.
+        This function helps add more cells in a compressed manner without adding them manually.
+
+        Parameters
+        ----------
+        cell : ``Cell``
+            The cell to be added.
+        repeat : ``int``
+            The number of times to be added.
+        """
+        for _ in range(repeat):
+            self.cells.append(cell)
 
 
 @dataclass
 class Layer:
-    layer: list[tuple[Block, int]]
+    """Usually big neural networks have multiple `layers`.
+    Each such layer has multiple blocks.
+    Sometimes one block is repeated multiple times.
+    We added cells repeatedly in a block to easily add them to the model.
+    Here we add blocks repeatedly to add them easily to the model.
+    """
+
+    cells: list[Cell]
+
+    def add_cells(self, block: Block, repeat: int) -> None:
+        """Adds new cells to the current block.
+        This function helps add more cells in a compressed manner without adding them manually.
+
+        Parameters
+        ----------
+        block : ``Block``
+            Block to be added.
+        repeat : ``int``
+            Number of times the block is repeated.
+        """
+        for _ in range(repeat):
+            self.cells.extend(block.cells)
 
 
 @dataclass
 class Unit:
+    """We asssume that each model consists of some `units`.
+    Such a unit can have a single cell or a layer or a single block.
+    """
+
     unit: Cell | Block | Layer
+
+    def get_cells(self) -> list[Cell]:
+        """Makes adding cells to the model easy.
+
+        Returns
+        -------
+        ``list[Cell]``
+            List of cells in current unit.
+        """
+        if isinstance(self.unit, Cell):
+            return [self.unit]
+        if isinstance(self.unit, Block):
+            return self.unit.cells
+        return self.unit.cells
+
+
+@dataclass
+class Model:
+    backbone: list[Unit]
+
+    def add_unit(self, unit: Unit) -> None:
+        self.backbone.append(unit)
+
+    def all_cells(self) -> list[Cell]:
+        cells = []
+        for unit in self.backbone:
+            cells.extend(unit.get_cells())
+
+        return cells
+
+    def get_sequential(self) -> Sequential:
+        return Sequential(*self.all_cells())
