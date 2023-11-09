@@ -49,7 +49,7 @@ class BlockConfiguration(UnitConfiguration):
 
     block: list[tuple[CellConfiguration, int]]
 
-    def add_cells(self, cell_config: CellConfiguration, repeat: int) -> None:
+    def add_cells(self, cell_config: CellConfiguration, repeat: int = 1) -> None:
         self.block.append((cell_config, repeat))
 
     def add_single_cells(self, *cells) -> None:
@@ -60,8 +60,13 @@ class BlockConfiguration(UnitConfiguration):
 class LayerConfiguration(UnitConfiguration):
     layer: list[tuple[BlockConfiguration, int]]
 
-    def add_blocks(self, block_config: BlockConfiguration, repeat: int) -> None:
+    def add_blocks(self, block_config: BlockConfiguration, repeat: int = 1) -> None:
         self.layer.append((block_config, repeat))
+
+    def add_single_cell(self, cell_config: CellConfiguration, repeat: int = 1) -> None:
+        block = BlockConfiguration(block=[])
+        block.add_cells(cell_config=cell_config, repeat=repeat)
+        self.layer.append((block, repeat))
 
 
 class Configuration(BaseModel):

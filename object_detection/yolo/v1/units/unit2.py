@@ -1,17 +1,16 @@
 """Second unit of YOLOv1."""
 
-from object_detection.yolo.config import (
-    BlockConfiguration,
-    Convolution2dConfiguration,
-    MaxPool2dConfiguration,
-)
+from object_detection.yolo.config import LayerConfiguration, MaxPool2dConfiguration
+from object_detection.yolo.v1.units.common import convolution_block
 
-block1_cell1 = Convolution2dConfiguration(
+block1 = convolution_block(
     kernel_size=3, stride=1, padding=1, in_channels=64, out_channels=192
 )
-block1_cell2 = MaxPool2dConfiguration()
-block1 = BlockConfiguration(block=[])
-block1.add_cells(cell_config=block1_cell1, repeat=1)
-block1.add_cells(cell_config=block1_cell2, repeat=1)
 
-config = block1
+
+layer1 = LayerConfiguration(layer=[])
+layer1.add_blocks(block_config=block1)
+layer1.add_single_cell(cell_config=MaxPool2dConfiguration())
+
+
+config = layer1

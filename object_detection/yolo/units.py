@@ -2,9 +2,10 @@
 
 from dataclasses import dataclass
 
-from torch.nn import Conv2d, LeakyReLU, MaxPool2d, Module, ReLU, Sequential
+from torch.nn import BatchNorm2d, Conv2d, LeakyReLU, MaxPool2d, Module, ReLU, Sequential
 
 from object_detection.yolo.config import (
+    BatchNorm2dConfiguration,
     CellConfiguration,
     Convolution2dConfiguration,
     LeakyReLUConfiguration,
@@ -24,16 +25,20 @@ class Cell:
     def __new__(cls, cell_configuration: CellConfiguration) -> Module:
         kwargs = cell_configuration.model_dump()
 
+        if isinstance(cell_configuration, BatchNorm2dConfiguration):
+            return BatchNorm2d(**kwargs)
+
         if isinstance(cell_configuration, Convolution2dConfiguration):
             return Conv2d(**kwargs)
 
         if isinstance(cell_configuration, MaxPool2dConfiguration):
             return MaxPool2d(**kwargs)
-        if isinstance(cell_configuration, ReLUConfiguration):
-            return ReLU(**kwargs)
 
         if isinstance(cell_configuration, LeakyReLUConfiguration):
             return LeakyReLU(**kwargs)
+
+        if isinstance(cell_configuration, ReLUConfiguration):
+            return ReLU(**kwargs)
 
 
 @dataclass
@@ -81,7 +86,7 @@ class Layer:
 
     cells: list[Cell]
 
-    def add_cells(self, block: Block, repeat: int) -> None:
+    def add_cells(self, block: Block, repeat: int = 1) -> None:
         """Adds new cells to the current block.
         This function helps add more cells in a compressed manner without adding them manually.
 
@@ -94,6 +99,10 @@ class Layer:
         """
         for _ in range(repeat):
             self.cells.extend(block.cells)
+
+    def add_single_cell(self, cell: Cell, repeat: int = 1) -> None:
+        for _ in range(repeat):
+            self.cells.append(cell)
 
 
 @dataclass
