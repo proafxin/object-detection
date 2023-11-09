@@ -2,11 +2,11 @@
 
 from object_detection.yolo.config import (
     BlockConfiguration,
-    ConvolutionConfiguration,
+    Convolution2dConfiguration,
     MaxPool2dConfiguration,
 )
 
-block1_cell1 = ConvolutionConfiguration(
+block1_cell1 = Convolution2dConfiguration(
     kernel_size=3, stride=1, padding=1, in_channels=64, out_channels=192
 )
 block1_cell2 = MaxPool2dConfiguration()

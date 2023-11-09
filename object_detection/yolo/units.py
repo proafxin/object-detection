@@ -6,7 +6,7 @@ from torch.nn import Conv2d, LeakyReLU, MaxPool2d, Module, ReLU, Sequential
 
 from object_detection.yolo.config import (
     CellConfiguration,
-    ConvolutionConfiguration,
+    Convolution2dConfiguration,
     LeakyReLUConfiguration,
     MaxPool2dConfiguration,
     ReLUConfiguration,
@@ -24,7 +24,7 @@ class Cell:
     def __new__(cls, cell_configuration: CellConfiguration) -> Module:
         kwargs = cell_configuration.model_dump()
 
-        if isinstance(cell_configuration, ConvolutionConfiguration):
+        if isinstance(cell_configuration, Convolution2dConfiguration):
             return Conv2d(**kwargs)
 
         if isinstance(cell_configuration, MaxPool2dConfiguration):
@@ -114,8 +114,7 @@ class Unit:
         """
         if isinstance(self.unit, Cell):
             return [self.unit]
-        if isinstance(self.unit, Block):
-            return self.unit.cells
+
         return self.unit.cells
 
 

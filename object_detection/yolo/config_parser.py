@@ -29,10 +29,13 @@ class ConfigurationParser:
         return block
 
     def get_layer_cells(self, layer_configuration: LayerConfiguration) -> Layer:
+        layer = Layer(cells=[])
+
         for block_config, repeat in layer_configuration.layer:
-            layer = Layer(cells=[])
             block = self.get_block_cells(block_configuration=block_config)
             layer.add_cells(block=block, repeat=repeat)
+
+        return layer
 
     def get_model(self) -> Model:
         model = Model(backbone=[])
