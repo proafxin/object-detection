@@ -33,7 +33,7 @@ Cell is an individual component such as Convolution, MaxPool, ReLU or other acti
 A block consists of some cells. Sometimes a single component is repeated multiple times.
 To make it easy for us to specify the model, instead of adding the repeated components individually, we simply specify a repeition factor.
 The same idea goes for a layer. A layer consists of some blocks which may be repeated.
-The idea of `unit` may be confusing at first. First of all, it completely depends on the user. However, a good idea to make a separation would be at where we take maxpool. See the following figure:
+The idea of `unit` may be confusing at first. First of all, it completely depends on the user. However, a good idea to make a separation would be at where we take maxpool or connected layers. See the following figure:
 ![Yolov1 architecture](image.png)
 Here, there is a maxpool after the first convolution. So that will be our first unit: convolution combined with maxpool. Same for second unit.
 In third unit, we have 4 convolution and then maxpool.

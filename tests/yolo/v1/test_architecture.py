@@ -17,4 +17,4 @@ def test_yolov1_architecture(x_cnn: Tensor) -> None:
     sequential = architecture.model.get_sequential()
     out = sequential(x_cnn)
     assert isinstance(out, Tensor)
-    assert out.shape == Size([10, 1024, 14, 14])
+    assert out.shape == Size([10, 1024, 3, 3])
