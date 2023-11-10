@@ -56,6 +56,10 @@ class BlockConfiguration(UnitConfiguration):
         for cell in cells:
             self.block.append((cell, 1))
 
+    def extend(self, cell_configs: list[tuple[CellConfiguration, int]]) -> None:
+        for cell_config, repeat in cell_configs:
+            self.block.append((cell_config, repeat))
+
 
 class LayerConfiguration(UnitConfiguration):
     layer: list[tuple[BlockConfiguration, int]]

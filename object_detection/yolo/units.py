@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from torch.nn import BatchNorm2d, Conv2d, LeakyReLU, MaxPool2d, Module, ReLU, Sequential
+from torch.nn import BatchNorm2d, Conv2d, LeakyReLU, MaxPool2d, Module, Sequential
 
 from object_detection.yolo.config import (
     BatchNorm2dConfiguration,
@@ -10,7 +10,6 @@ from object_detection.yolo.config import (
     Convolution2dConfiguration,
     LeakyReLUConfiguration,
     MaxPool2dConfiguration,
-    ReLUConfiguration,
 )
 
 
@@ -36,9 +35,6 @@ class Cell:
 
         if isinstance(cell_configuration, LeakyReLUConfiguration):
             return LeakyReLU(**kwargs)
-
-        if isinstance(cell_configuration, ReLUConfiguration):
-            return ReLU(**kwargs)
 
 
 @dataclass
@@ -100,10 +96,6 @@ class Layer:
         for _ in range(repeat):
             self.cells.extend(block.cells)
 
-    def add_single_cell(self, cell: Cell, repeat: int = 1) -> None:
-        for _ in range(repeat):
-            self.cells.append(cell)
-
 
 @dataclass
 class Unit:
@@ -121,8 +113,6 @@ class Unit:
         ``list[Cell]``
             List of cells in current unit.
         """
-        if isinstance(self.unit, Cell):
-            return [self.unit]
 
         return self.unit.cells
 
