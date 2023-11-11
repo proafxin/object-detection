@@ -11,10 +11,9 @@ on:
 
 jobs:
   run_linux:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest]
         python-version: ["3.10"]
     steps:
       - uses: actions/checkout@v2
@@ -40,10 +39,9 @@ jobs:
           name: codecov-pynt
           verbose: true
   run_linux:
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
     strategy:
       matrix:
-        os: [windows-latest]
         python-version: ["3.10"]
     steps:
       - uses: actions/checkout@v2
