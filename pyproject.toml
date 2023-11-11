@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "object-detection"
-version = "1.3.2"
+version = "1.3.3"
 description = "Implementation of different object detection algorithms."
 authors = ["Masum Billal <proafxin@users.noreply.github.com>"]
 license = "LICENSE"

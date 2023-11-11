@@ -1,0 +1,11 @@
+"""Some hyperparameters"""
+
+
+IMAGE_SIZE: int = 448
+GRID_SIZE: int = 7
+FINAL_CONV_OUTPUT_CHANNEL: int = 1024
+FINAL_CONV_OUTPUT_SIZE: int = 3
+NUM_CLASS: int = 20
+LINEAR_OUTPUT_FEATURES: int = 4096
+NUM_BOXES: int = 2
+IN_CHANNELS: int = 3

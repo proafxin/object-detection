@@ -2,13 +2,24 @@
 
 from dataclasses import dataclass
 
-from torch.nn import BatchNorm2d, Conv2d, LeakyReLU, MaxPool2d, Module, Sequential
+from torch.nn import (
+    BatchNorm2d,
+    Conv2d,
+    Dropout,
+    LeakyReLU,
+    Linear,
+    MaxPool2d,
+    Module,
+    Sequential,
+)
 
 from object_detection.yolo.config import (
     BatchNorm2dConfiguration,
     CellConfiguration,
     Convolution2dConfiguration,
+    DropOutConfiguration,
     LeakyReLUConfiguration,
+    LinearConfiguration,
     MaxPool2dConfiguration,
 )
 
@@ -35,6 +46,12 @@ class Cell:
 
         if isinstance(cell_configuration, LeakyReLUConfiguration):
             return LeakyReLU(**kwargs)
+
+        if isinstance(cell_configuration, DropOutConfiguration):
+            return Dropout(**kwargs)
+
+        if isinstance(cell_configuration, LinearConfiguration):
+            return Linear(**kwargs)
 
 
 @dataclass
