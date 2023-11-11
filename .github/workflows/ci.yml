@@ -38,7 +38,7 @@ jobs:
           files: ./coverage.xml
           name: codecov-pynt
           verbose: true
-  run_linux:
+  run_windows:
     runs-on: windows-latest
     strategy:
       matrix:
