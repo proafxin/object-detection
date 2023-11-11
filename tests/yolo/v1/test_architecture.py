@@ -3,18 +3,14 @@
 from torch import Size, Tensor
 from torch.nn import Module
 
-from object_detection.yolo.v1.architecture import Architecture
+from object_detection.yolo.v1.model import YOLOv1
 
 
 def test_yolov1_architecture(x_cnn: Tensor) -> None:
-    architecture = Architecture()
-    all_cells = architecture.model.all_cells()
+    yolo = YOLOv1()
+    assert isinstance(yolo, Module)
 
-    assert isinstance(all_cells, list)
-    for cell in all_cells:
-        assert isinstance(cell, Module)
+    out = yolo(x_cnn)
 
-    sequential = architecture.model.get_sequential()
-    out = sequential(x_cnn)
     assert isinstance(out, Tensor)
-    assert out.shape == Size([10, 1024, 3, 3])
+    assert out.shape == Size([10, 1470])
