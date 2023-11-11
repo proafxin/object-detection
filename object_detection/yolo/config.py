@@ -16,6 +16,22 @@ class CellConfiguration(UnitConfiguration):
     pass
 
 
+class DropOutConfiguration(CellConfiguration):
+    p: float = Field(default=0.2)
+    inplace: bool = Field(default=False)
+
+
+class LinearConfiguration(CellConfiguration):
+    in_features: int
+    out_features: int
+    bias: bool = Field(default=False)
+
+
+class FlattenConfiguration(CellConfiguration):
+    start_dim: int = Field(default=0)
+    end_dim: int = Field(default=-1)
+
+
 class BatchNorm2dConfiguration(CellConfiguration):
     num_features: int
     eps: float = Field(default=1e-05)

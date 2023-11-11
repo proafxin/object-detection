@@ -41,7 +41,13 @@ class ConfigurationParser:
         model = Model(backbone=[])
 
         for unit_config in self.configuration.unit_configs:
-            if isinstance(unit_config, LayerConfiguration):
+            if isinstance(unit_config, CellConfiguration):
+                cell = self.get_cell(cell_configuration=unit_config)
+                model.add_unit(unit=Unit(unit=cell))
+            elif isinstance(unit_config, BlockConfiguration):
+                block = self.get_block_cells(block_configuration=unit_config)
+                model.add_unit(unit=Unit(unit=block))
+            elif isinstance(unit_config, LayerConfiguration):
                 layer = self.get_layer_cells(layer_configuration=unit_config)
                 model.add_unit(unit=Unit(unit=layer))
 

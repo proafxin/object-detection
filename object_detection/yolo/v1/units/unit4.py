@@ -1,7 +1,7 @@
 """4th unit of YOLOv1 model."""
 
 from object_detection.yolo.config import LayerConfiguration, MaxPool2dConfiguration
-from object_detection.yolo.v1.units.common import convolution_block
+from object_detection.yolo.v1.units.blocks import convolution_block
 
 conv_block1 = convolution_block(
     kernel_size=1, stride=1, padding=0, in_channels=512, out_channels=256
