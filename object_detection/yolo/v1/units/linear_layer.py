@@ -8,24 +8,19 @@ from object_detection.yolo.config import (
     LeakyReLUConfiguration,
     LinearConfiguration,
 )
-from object_detection.yolo.v1.settings import (
-    FINAL_CONV_OUTPUT_CHANNEL,
-    FINAL_CONV_OUTPUT_SIZE,
-    GRID_SIZE,
-    LINEAR_OUTPUT_FEATURES,
-    NUM_BOXES,
-    NUM_CLASS,
-)
+from object_detection.yolo.v1.hyperparams import hyperparams
 
 linear_cell1 = LinearConfiguration(
-    in_features=FINAL_CONV_OUTPUT_CHANNEL
-    * FINAL_CONV_OUTPUT_SIZE
-    * FINAL_CONV_OUTPUT_SIZE,
-    out_features=LINEAR_OUTPUT_FEATURES,
+    in_features=hyperparams.final_conv_output_channel
+    * hyperparams.final_conv_output_size
+    * hyperparams.final_conv_output_size,
+    out_features=hyperparams.linear_output_features,
 )
 linear_cell2 = LinearConfiguration(
-    in_features=LINEAR_OUTPUT_FEATURES,
-    out_features=GRID_SIZE * GRID_SIZE * (NUM_CLASS + NUM_BOXES * 5),
+    in_features=hyperparams.linear_output_features,
+    out_features=hyperparams.grid_size
+    * hyperparams.grid_size
+    * (hyperparams.num_class + hyperparams.num_boxes * 5),
 )
 
 block = BlockConfiguration(block=[])
