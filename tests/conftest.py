@@ -7,5 +7,17 @@ from object_detection.yolo.v1.hyperparams import hyperparams
 
 
 @pytest.fixture(scope="function")
-def x_cnn() -> Tensor:
-    return randn(size=(10, 3, hyperparams.image_size, hyperparams.image_size))
+def batch_size() -> int:
+    return 4
+
+
+@pytest.fixture(scope="function")
+def x_cnn(batch_size: int) -> Tensor:
+    return randn(
+        size=(
+            batch_size,
+            hyperparams.in_channels,
+            hyperparams.image_size,
+            hyperparams.image_size,
+        )
+    )

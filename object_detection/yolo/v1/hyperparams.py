@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 
 class HyperParameters(BaseModel):
     image_size: int = Field(default=448)
-    grid_size: int = Field(default=7)
+    grid_size: int = Field(default=19)
     final_conv_output_channel: int = Field(default=1024)
     final_conv_output_size: int = Field(default=3)
     num_class: int = Field(default=20)
